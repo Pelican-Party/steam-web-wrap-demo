@@ -22,7 +22,7 @@
 		<div id="notInSteamWebWrap" class="notecard warn" style="display: none;">
 			<p>The page doesn't seem to have access to the 'steamWebWrap' object.</p>
 		</div>
-		<button class="steam-web-wrap-button" onclick="steamWebWrap.closeApp();">Close App</button>
+		<button class="steam-web-wrap-button" onclick="steamWebWrap.quitApp();">Close App</button>
 		<script>
 			if (!("steamWebWrap" in globalThis)) {
 				for (const button of document.querySelectorAll(".steam-web-wrap-button")) {
