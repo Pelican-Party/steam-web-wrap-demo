@@ -2,13 +2,18 @@
 <html>
 	<head>
 		<style>
-			body {
+			html, body {
+				font-family: sans-serif;
+				background-color: white;
+			}
+
+			main {
 				max-width: 800px;
 				margin: auto;
 			}
 
 			.notecard {
-				padding: 10px;
+				padding: 10px 20px;
 				border-radius: 5px;
 			}
 
@@ -16,13 +21,62 @@
 				background-color: rgb(255, 241, 150);
 				border: 1px solid rgb(255, 217, 93);
 			}
+
+			code {
+				background-color: #dddddd;
+				padding: 1px 2px;
+				border-radius: 3px;
+			}
 		</style>
 	</head>
 	<body>
-		<div id="notInSteamWebWrap" class="notecard warn" style="display: none;">
-			<p>The page doesn't seem to have access to the 'steamWebWrap' object.</p>
-		</div>
-		<button class="steam-web-wrap-button" onclick="steamWebWrap.quitApp();">Close App</button>
+		<main>
+			<h1>Steam Web Wrap Demo</h1>
+			<p>
+				This page functions as a demo for the capabilities Steam Web Wrap has and an example on how to use them.
+			</p>
+			<div id="notInSteamWebWrap" class="notecard warn" style="display: none">
+				<p>The page doesn't seem to have access to the 'steamWebWrap' object. Most of the functionality on this page will not work.</p>
+			</div>
+
+			<h2>Closing the Game</h2>
+			<p>
+				In a browser, users can close your page at any time. But since Steam Web Wrap launches games in full screen by default, it might be difficult for users to find out how to close your game.
+			</p>
+			<p>
+				Even though they can still close the game through the steam overlay or by using shortcuts like <code>Alt</code> + <code>F4</code> or <code>Command</code> + <code>W</code>, you might want to add an exit button in your menu somewhere. You can close the game by calling <code
+				>window.close()</code>. Normally, browsers only allow closing windows that were created by a page, but in Steam Web Wrap this is not the case.
+			</p>
+			<button class="steam-web-wrap-button" onclick="window.close();">Click Here to Close This Window</button>
+
+			<h2>Toggling Fullscreen</h2>
+			<p>
+				You can use the Fullscreen API like you normally would. <code>document.body.requestFullscreen()</code> and <code>document.exitFullscreen()</code> will change the current full screen state. And <code>document.fullscreenElement</code> can be used to detect whether the page is currently
+				fullscreen.
+			</p>
+			<script>
+				async function toggleFullscreen() {
+					if (!document.fullscreenElement) {
+						await document.body.requestFullscreen();
+					} else {
+						await document.exitFullscreen();
+					}
+				}
+			</script>
+			<button id="toggleFullscreenButton" onclick="toggleFullscreen()">Toggle Fullscreen</button>
+			<script>
+				const toggleFullscreenButton = document.getElementById("toggleFullscreenButton");
+
+				function updateFullscreenButton() {
+					toggleFullscreenButton.textContent = document.fullscreenElement ? "Exit Fullscreen" : "Enter Fullscreen";
+				}
+
+				document.addEventListener("fullscreenchange", (e) => {
+					updateFullscreenButton();
+				});
+				updateFullscreenButton();
+			</script>
+		</main>
 		<script>
 			if (!("steamWebWrap" in globalThis)) {
 				for (const button of document.querySelectorAll(".steam-web-wrap-button")) {
