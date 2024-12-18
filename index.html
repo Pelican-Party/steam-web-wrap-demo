@@ -76,6 +76,13 @@
 				});
 				updateFullscreenButton();
 			</script>
+
+			<h2>Opening External URLs</h2>
+			<p>
+				Links that would normally open in a new electron window, such as <code>&lt;a target="_blank"&gt;</code> tags or <code>window.open()</code> will not do so in Steam Web Wrap. Instead, the default browser of the system is opened.
+			</p>
+			<a href="https://example.com" target="_blank">https://example.com</a>
+			<button onclick="window.open('https:\/\/example.com')">window.open("https://example.com")</button>
 		</main>
 		<script>
 			if (!("steamWebWrap" in globalThis)) {
