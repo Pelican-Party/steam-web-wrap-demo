@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			html, body {
+				font-family: sans-serif;
+				background-color: white;
+			}
+
+			main {
+				max-width: 800px;
+				margin: auto;
+			}
+
+			form {
+				display: flex;
+				flex-direction: column;
+				gap: 20px;
+
+				label {
+					display: flex;
+					flex-direction: column;
+
+					input {
+						max-width: 200px;
+					}
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<h1>Launch Parameters Demo</h1>
+			<p>This is a page demonstrating how you can open a browser and then send some data back to your game.</p>
+			<form>
+				<label>App id<input id="appId" type="number"></label>
+				<label>Parameters <input id="parameters" value="myCustomParameters"></label>
+			</form>
+			<p id="visitText" style="display: none;">Visit <a id="link"></a>.</p>
+		</main>
+		<script>
+			function update() {
+				const href = `steam://run/${appId.value}//${parameters.value}`;
+				visitText.style.display = (appId.value && parameters.value) ? "" : "none";
+				link.href = href;
+				link.textContent = href;
+			}
+
+			appId.addEventListener("input", update);
+			appId.addEventListener("change", update);
+			parameters.addEventListener("input", update);
+			parameters.addEventListener("change", update);
+			const url = new URL(location.href);
+			const urlAppId = parseInt(url.searchParams.get("appId"));
+			if (!isNaN(urlAppId)) {
+				appId.value = urlAppId;
+			}
+			update();
+		</script>
+	</body>
+</html>

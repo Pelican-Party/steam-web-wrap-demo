@@ -23,9 +23,16 @@
 			}
 
 			code {
-				background-color: #dddddd;
+				background-color: #e8e8e8;
 				padding: 1px 2px;
 				border-radius: 3px;
+			}
+
+			pre {
+				background-color: #eeeeee;
+				padding: 10px;
+				border-radius: 5px;
+				overflow: auto;
 			}
 		</style>
 	</head>
@@ -83,14 +90,78 @@
 			</p>
 			<a href="https://example.com" target="_blank">https://example.com</a>
 			<button onclick="window.open('https:\/\/example.com')">window.open("https://example.com")</button>
+			<h2>Steamworks SDK</h2>
+			<div id="noSteamworksWarning" class="notecard warn" style="display: none">
+				<p id="noSteamworksWarningText">The Steamworks SDK has not been initialized.</p>
+			</div>
+			<p>Steam Web Wrap automatically initializes the Steamworks SDK for you. If your game was launched through steam, the app id is automatically determined. Otherwise you'll have to make sure you launch Steam Web Wrap using the <code>--appid=&lt;your app id"&gt;</code> command line option. You can use the <code>steamworks</code> global to make API calls.</p>
+			<pre>
+if (steamworks) { // the SDK may not be loaded if an app id couldn't be determined
+	const appId = await steamworks.utils.getAppId();
+	steamworksAppId.textContent = appId;
+}
+</pre>
+			<p>Your steamworks app id is: <span class="steamworks-app-id">&lt;unknown&gt;</span></p>
+
+			<h3>Supported Steamworks functionality</h3>
+
+			<p>Steam Web Wrap uses <a href="https://github.com/ceifa/steamworks.js/" target="_blank">steamworks.js</a> for this. Most of these API calls map directly to the API of steamworks.js. However, for security reasons we decided not to expose node functionality to the renderer process. We are dealing with remote content after all. Because of this, some functionality may not have been implemented yet. Parts of the API that only deal with primitive types will probably work, but if you find any missing functionality, please <a href="https://github.com/Pelican-Party/steam-web-wrap/issues" target="_blank">file an issue</a>.</p>
+
+			<h3>Callbacks</h3>
+
+			<p>Callbacks from the Steamworks SDK work the same as they do in steamworks.js:</p>
+
+			<pre>
+steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParameters, async () => {
+	console.log("New steam url parameters received: " + await steamworks.apps.launchCommandLine());
+});
+</pre>
+
+	<p>This callback will fire when you open a <code>steam://</code> url after your game has already launched. Go ahead and try to visit <a id="runAppLink"><code>steam://run/<span class="steamworks-app-id">&lt;your app id&gt;</span>//myCustomParameters</code></a> (the double // is required for some reason). The event should show up below. <span id="launchParametersDemoText" style="display: none;"><a id="launchParametersDemoLink" target="_blank">Or try a demo with your default browser</a>.</span></p>
+
+			<pre id="eventLog"><div>Waiting for events...</div></pre>
+
+			<script>
+				function logEvent(str) {
+					const el = document.createElement("div");
+					el.textContent = str;
+					eventLog.append(el);
+				}
+				if (steamworks) {
+					steamworks.callback.register(steamworks.callback.SteamCallback.SteamServersConnected, () => {
+						logEvent("Steam servers connected");
+					});
+					steamworks.callback.register(steamworks.callback.SteamCallback.SteamServersDisconnected, (event) => {
+						logEvent("Steam servers disconnected with reason " + event.reason);
+					});
+					steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParameters, async (event) => {
+						logEvent("New steam url parameters received: " + await steamworks.apps.launchCommandLine());
+					});
+				}
+			</script>
 		</main>
-		<script>
-			if (!navigator.userAgent.includes("steam-web-wrap/")) {
+		<script type="module">
+			const isInSteamWebWrap = navigator.userAgent.includes("steam-web-wrap/");
+			if (!isInSteamWebWrap) {
 				for (const button of document.querySelectorAll(".steam-web-wrap-button")) {
 					button.disabled = true;
 				}
 
 				notInSteamWebWrap.style.display = "";
+			} else if (!("steamworks" in globalThis) || !steamworks) {
+				noSteamworksWarning.style.display = "";
+				const warningText = _steamWebWrapInternal.steamNotInitializedWarningMessage;
+				if (warningText) {
+					noSteamworksWarningText.textContent = warningText;
+				}
+			} else {
+				const appId = await steamworks.utils.getAppId();
+				for (const el of document.querySelectorAll(".steamworks-app-id")) {
+					el.textContent = appId;
+				}
+				runAppLink.href = `steam://run/${appId}//myCustomParameters`;
+				launchParametersDemoText.style.display = "";
+				launchParametersDemoLink.href = `./launchParametersDemo.html?appId=${appId}`;
 			}
 		</script>
 	</body>
