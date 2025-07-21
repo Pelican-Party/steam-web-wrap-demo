@@ -36,7 +36,7 @@
 				This page functions as a demo for the capabilities Steam Web Wrap has and an example on how to use them.
 			</p>
 			<div id="notInSteamWebWrap" class="notecard warn" style="display: none">
-				<p>The page doesn't seem to have access to the 'steamWebWrap' object. Most of the functionality on this page will not work.</p>
+				<p>The page doesn't seem to be running in Steam Web Wrap. Most of the functionality on this page will not work.</p>
 			</div>
 
 			<h2>Closing the Game</h2>
@@ -85,7 +85,7 @@
 			<button onclick="window.open('https:\/\/example.com')">window.open("https://example.com")</button>
 		</main>
 		<script>
-			if (!("steamWebWrap" in globalThis)) {
+			if (!navigator.userAgent.includes("steam-web-wrap/")) {
 				for (const button of document.querySelectorAll(".steam-web-wrap-button")) {
 					button.disabled = true;
 				}
