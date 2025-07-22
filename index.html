@@ -113,7 +113,10 @@ if (steamworks) { // the SDK may not be loaded if an app id couldn't be determin
 
 			<pre>
 steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParameters, async () => {
-	console.log("New steam url parameters received: " + await steamworks.apps.launchCommandLine());
+	const path = await steamworks.apps.launchCommandLine();
+	const param1 = await steamworks.apps.launchQueryParam("param1");
+	const param2 = await steamworks.apps.launchQueryParam("param2");
+	console.log(`New steam url parameters received: ${path} param1: ${param1} param2: ${param2}`);
 });
 </pre>
 
@@ -135,7 +138,10 @@ steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParam
 						logEvent("Steam servers disconnected with reason " + event.reason);
 					});
 					steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParameters, async (event) => {
-						logEvent("New steam url parameters received: " + await steamworks.apps.launchCommandLine());
+						const path = await steamworks.apps.launchCommandLine();
+						const param1 = await steamworks.apps.launchQueryParam("param1");
+						const param2 = await steamworks.apps.launchQueryParam("param2");
+						logEvent(`New steam url parameters received: ${path} param1: ${param1} param2: ${param2}`);
 					});
 				}
 			</script>

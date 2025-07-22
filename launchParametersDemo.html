@@ -34,22 +34,34 @@
 			<p>This is a page demonstrating how you can open a browser and then send some data back to your game.</p>
 			<form>
 				<label>App id<input id="appId" type="number"></label>
-				<label>Parameters <input id="parameters" value="myCustomParameters"></label>
+				<label>Path <input id="path" value="myCustomPath"></label>
+				<label>Parameter 1 <input id="param1" value="value1"></label>
+				<label>Parameter 2 <input id="param2" value="value2"></label>
 			</form>
 			<p id="visitText" style="display: none;">Visit <a id="link"></a>.</p>
 		</main>
 		<script>
 			function update() {
-				const href = `steam://run/${appId.value}//${parameters.value}`;
-				visitText.style.display = (appId.value && parameters.value) ? "" : "none";
+				let href = `steam://run/${appId.value}//${path.value}`;
+				const params = [];
+				if (param1.value) params.push("param1=" + param1.value);
+				if (param2.value) params.push("param2=" + param2.value);
+				if (params.length > 0) {
+					href += "/?" + params.join(";");
+				}
+				visitText.style.display = (appId.value && path.value) ? "" : "none";
 				link.href = href;
 				link.textContent = href;
 			}
 
 			appId.addEventListener("input", update);
 			appId.addEventListener("change", update);
-			parameters.addEventListener("input", update);
-			parameters.addEventListener("change", update);
+			path.addEventListener("input", update);
+			path.addEventListener("change", update);
+			param1.addEventListener("input", update);
+			param1.addEventListener("change", update);
+			param2.addEventListener("input", update);
+			param2.addEventListener("change", update);
 			const url = new URL(location.href);
 			const urlAppId = parseInt(url.searchParams.get("appId"));
 			if (!isNaN(urlAppId)) {
