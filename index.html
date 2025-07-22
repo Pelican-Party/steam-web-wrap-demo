@@ -43,23 +43,29 @@
 				This page functions as a demo for the capabilities Steam Web Wrap has and an example on how to use them.
 			</p>
 			<div id="notInSteamWebWrap" class="notecard warn" style="display: none">
-				<p>The page doesn't seem to be running in Steam Web Wrap. Most of the functionality on this page will not work.</p>
+				<p>
+					The page doesn't seem to be running in Steam Web Wrap. Most of the functionality on this page will not work.
+				</p>
 			</div>
 
 			<h2>Closing the Game</h2>
 			<p>
-				In a browser, users can close your page at any time. But since Steam Web Wrap launches games in full screen by default, it might be difficult for users to find out how to close your game.
+				In a browser, users can close your page at any time. But since Steam Web Wrap launches games in full screen by
+				default, it might be difficult for users to find out how to close your game.
 			</p>
 			<p>
-				Even though they can still close the game through the steam overlay or by using shortcuts like <code>Alt</code> + <code>F4</code> or <code>Command</code> + <code>W</code>, you might want to add an exit button in your menu somewhere. You can close the game by calling <code
-				>window.close()</code>. Normally, browsers only allow closing windows that were created by a page, but in Steam Web Wrap this is not the case.
+				Even though they can still close the game through the steam overlay or by using shortcuts like <code>Alt</code>
+				+ <code>F4</code> or <code>Command</code> + <code>W</code>, you might want to add an exit button in your menu
+				somewhere. You can close the game by calling <code>window.close()</code>. Normally, browsers only allow closing
+				windows that were created by a page, but in Steam Web Wrap this is not the case.
 			</p>
 			<button class="steam-web-wrap-button" onclick="window.close();">Click Here to Close This Window</button>
 
 			<h2>Toggling Fullscreen</h2>
 			<p>
-				You can use the Fullscreen API like you normally would. <code>document.body.requestFullscreen()</code> and <code>document.exitFullscreen()</code> will change the current full screen state. And <code>document.fullscreenElement</code> can be used to detect whether the page is currently
-				fullscreen.
+				You can use the Fullscreen API like you normally would. <code>document.body.requestFullscreen()</code> and <code
+				>document.exitFullscreen()</code> will change the current full screen state. And <code
+				>document.fullscreenElement</code> can be used to detect whether the page is currently fullscreen.
 			</p>
 			<script>
 				async function toggleFullscreen() {
@@ -75,7 +81,9 @@
 				const toggleFullscreenButton = document.getElementById("toggleFullscreenButton");
 
 				function updateFullscreenButton() {
-					toggleFullscreenButton.textContent = document.fullscreenElement ? "Exit Fullscreen" : "Enter Fullscreen";
+					toggleFullscreenButton.textContent = document.fullscreenElement
+						? "Exit Fullscreen"
+						: "Enter Fullscreen";
 				}
 
 				document.addEventListener("fullscreenchange", (e) => {
@@ -86,7 +94,9 @@
 
 			<h2>Opening External URLs</h2>
 			<p>
-				Links that would normally open in a new electron window, such as <code>&lt;a target="_blank"&gt;</code> tags or <code>window.open()</code> will not do so in Steam Web Wrap. Instead, the default browser of the system is opened.
+				Links that would normally open in a new electron window, such as <code>&lt;a target="_blank"&gt;</code> tags or
+				<code>window.open()</code> will not do so in Steam Web Wrap. Instead, the default browser of the system is
+				opened.
 			</p>
 			<a href="https://example.com" target="_blank">https://example.com</a>
 			<button onclick="window.open('https:\/\/example.com')">window.open("https://example.com")</button>
@@ -94,33 +104,59 @@
 			<div id="noSteamworksWarning" class="notecard warn" style="display: none">
 				<p id="noSteamworksWarningText">The Steamworks SDK has not been initialized.</p>
 			</div>
-			<p>Steam Web Wrap automatically initializes the Steamworks SDK for you. If your game was launched through steam, the app id is automatically determined. Otherwise you'll have to make sure you launch Steam Web Wrap using the <code>--appid=&lt;your app id"&gt;</code> command line option. You can use the <code>steamworks</code> global to make API calls.</p>
-			<pre>
+			<p>
+				Steam Web Wrap automatically initializes the Steamworks SDK for you. If your game was launched through steam,
+				the app id is automatically determined. Otherwise you'll have to make sure you launch Steam Web Wrap using the
+				<code>--appid=&lt;your app id"&gt;</code> command line option. You can use the <code>steamworks</code> global to
+				make API calls.
+			</p>
+			<pre
+			>
 if (steamworks) { // the SDK may not be loaded if an app id couldn't be determined
 	const appId = await steamworks.utils.getAppId();
 	steamworksAppId.textContent = appId;
 }
-</pre>
+</pre
+			>
 			<p>Your steamworks app id is: <span class="steamworks-app-id">&lt;unknown&gt;</span></p>
 
 			<h3>Supported Steamworks functionality</h3>
 
-			<p>Steam Web Wrap uses <a href="https://github.com/ceifa/steamworks.js/" target="_blank">steamworks.js</a> for this. Most of these API calls map directly to the API of steamworks.js. However, for security reasons we decided not to expose node functionality to the renderer process. We are dealing with remote content after all. Because of this, some functionality may not have been implemented yet. Parts of the API that only deal with primitive types will probably work, but if you find any missing functionality, please <a href="https://github.com/Pelican-Party/steam-web-wrap/issues" target="_blank">file an issue</a>.</p>
+			<p>
+				Steam Web Wrap uses <a href="https://github.com/ceifa/steamworks.js/" target="_blank">steamworks.js</a> for
+				this. Most of these API calls map directly to the API of steamworks.js. However, for security reasons we decided
+				not to expose node functionality to the renderer process. We are dealing with remote content after all. Because
+				of this, some functionality may not have been implemented yet. Parts of the API that only deal with primitive
+				types will probably work, but if you find any missing functionality, please <a
+					href="https://github.com/Pelican-Party/steam-web-wrap/issues"
+					target="_blank"
+				>file an issue</a>.
+			</p>
 
 			<h3>Callbacks</h3>
 
 			<p>Callbacks from the Steamworks SDK work the same as they do in steamworks.js:</p>
 
-			<pre>
+			<pre
+			>
 steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParameters, async () => {
 	const path = await steamworks.apps.launchCommandLine();
 	const param1 = await steamworks.apps.launchQueryParam("param1");
 	const param2 = await steamworks.apps.launchQueryParam("param2");
 	console.log(`New steam url parameters received: ${path} param1: ${param1} param2: ${param2}`);
 });
-</pre>
+</pre
+			>
 
-	<p>This callback will fire when you open a <code>steam://</code> url after your game has already launched. Go ahead and try to visit <a id="runAppLink"><code>steam://run/<span class="steamworks-app-id">&lt;your app id&gt;</span>//myCustomParameters</code></a> (the double // is required for some reason). The event should show up below. <span id="launchParametersDemoText" style="display: none;"><a id="launchParametersDemoLink" target="_blank">Or try a demo with your default browser</a>.</span></p>
+			<p>
+				This callback will fire when you open a <code>steam://</code> url after your game has already launched. Go ahead
+				and try to visit <a id="runAppLink"><code>steam://run/<span class="steamworks-app-id"
+						>&lt;your app id&gt;</span>//myCustomParameters</code></a> (the double // is required for some reason). The
+				event should show up below. <span id="launchParametersDemoText" style="display: none"><a
+						id="launchParametersDemoLink"
+						target="_blank"
+					>Or try a demo with your default browser</a>.</span>
+			</p>
 
 			<pre id="eventLog"><div>Waiting for events...</div></pre>
 
@@ -134,15 +170,21 @@ steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParam
 					steamworks.callback.register(steamworks.callback.SteamCallback.SteamServersConnected, () => {
 						logEvent("Steam servers connected");
 					});
-					steamworks.callback.register(steamworks.callback.SteamCallback.SteamServersDisconnected, (event) => {
-						logEvent("Steam servers disconnected with reason " + event.reason);
-					});
-					steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParameters, async (event) => {
-						const path = await steamworks.apps.launchCommandLine();
-						const param1 = await steamworks.apps.launchQueryParam("param1");
-						const param2 = await steamworks.apps.launchQueryParam("param2");
-						logEvent(`New steam url parameters received: ${path} param1: ${param1} param2: ${param2}`);
-					});
+					steamworks.callback.register(
+						steamworks.callback.SteamCallback.SteamServersDisconnected,
+						(event) => {
+							logEvent("Steam servers disconnected with reason " + event.reason);
+						},
+					);
+					steamworks.callback.register(
+						steamworks.callback.SteamCallback.NewUrlLaunchParameters,
+						async (event) => {
+							const path = await steamworks.apps.launchCommandLine();
+							const param1 = await steamworks.apps.launchQueryParam("param1");
+							const param2 = await steamworks.apps.launchQueryParam("param2");
+							logEvent(`New steam url parameters received: ${path} param1: ${param1} param2: ${param2}`);
+						},
+					);
 				}
 			</script>
 		</main>
