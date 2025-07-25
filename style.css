@@ -1,0 +1,32 @@
+html, body {
+	font-family: sans-serif;
+	background-color: white;
+}
+
+main {
+	max-width: 800px;
+	margin: auto;
+}
+
+.notecard {
+	padding: 10px 20px;
+	border-radius: 5px;
+}
+
+.warn {
+	background-color: rgb(255, 241, 150);
+	border: 1px solid rgb(255, 217, 93);
+}
+
+code {
+	background-color: #e8e8e8;
+	padding: 1px 2px;
+	border-radius: 3px;
+}
+
+pre {
+	background-color: #eeeeee;
+	padding: 10px;
+	border-radius: 5px;
+	overflow: auto;
+}
