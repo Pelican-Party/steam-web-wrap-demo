@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+	<defs>
+		<linearGradient id="gradient" x2="50%" x1="50%" y2="100%" y1="0%"><stop stop-color="#111d2e" offset="0%" /><stop
+				stop-color="#051839"
+				offset="21.2%"
+			/><stop stop-color="#0a1b48" offset="40.7%" /><stop stop-color="#132e62" offset="58.1%" /><stop
+				stop-color="#144b7e"
+				offset="73.8%"
+			/><stop stop-color="#136497" offset="87.3%" /><stop stop-color="#1387b8" offset="100%" /></linearGradient>
+		<g id="globeLines">
+			<path d="M 250 35 C 210 35 150 100 150 250 C 150 400 210 465 250 465"></path>
+			<path d="M 440 150 C 440 150 330 200 250 200 C 170 200 50 150 50 150"></path>
+		</g>
+		<mask id="circle">
+			<rect x="0" y="0" width="500" height="500" fill="black"></rect>
+			<ellipse cx="250" cy="250" rx="245" fill="white"></ellipse>
+		</mask>
+		<mask id="icon">
+			<rect x="0" y="0" width="500" height="500" fill="black"></rect>
+			<g
+				id="web"
+				fill="none"
+				stroke="white"
+				stroke-width="40"
+				transform="translate(250 250) scale(0.7) translate(-250 -250)"
+			>
+				<ellipse cx="250" cy="250" rx="215"></ellipse>
+				<use href="#globeLines" />
+				<use href="#globeLines" transform="rotate(180 250 250)" />
+			</g>
+		</mask>
+	</defs>
+	<g mask="url(#circle)">
+		<rect x="0" y="0" width="500" height="500" fill="url(#gradient)"></rect>
+		<rect x="0" y="0" width="500" height="500" fill="white" mask="url(#icon)"></rect>
+	</g>
+</svg>

@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="./style.css" type="text/css">
+		<link rel="icon" type="image/png" href="./favicon.svg" sizes="any" />
 	</head>
 	<body>
 		<main>
@@ -77,14 +78,12 @@
 				<code>--appid=&lt;your app id"&gt;</code> command line option. You can use the <code>steamworks</code> global to
 				make API calls.
 			</p>
-			<pre
-			>
+			<pre>
 if (steamworks) { // the SDK may not be loaded if an app id couldn't be determined
 	const appId = await steamworks.utils.getAppId();
 	steamworksAppId.textContent = appId;
 }
-</pre
-			>
+</pre>
 			<p>Your steamworks app id is: <span class="steamworks-app-id">&lt;unknown&gt;</span></p>
 
 			<h3>Supported Steamworks functionality</h3>
@@ -104,16 +103,14 @@ if (steamworks) { // the SDK may not be loaded if an app id couldn't be determin
 
 			<p>Callbacks from the Steamworks SDK work the same as they do in steamworks.js:</p>
 
-			<pre
-			>
+			<pre>
 steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParameters, async () => {
 	const path = await steamworks.apps.launchCommandLine();
 	const param1 = await steamworks.apps.launchQueryParam("param1");
 	const param2 = await steamworks.apps.launchQueryParam("param2");
 	console.log(`New steam url parameters received: ${path} param1: ${param1} param2: ${param2}`);
 });
-</pre
-			>
+</pre>
 
 			<p>
 				This callback will fire when you open a <code>steam://</code> url after your game has already launched. Go ahead
