@@ -1,12 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
 	<defs>
-		<linearGradient id="gradient" x2="50%" x1="50%" y2="100%" y1="0%"><stop stop-color="#111d2e" offset="0%" /><stop
+		<linearGradient id="gradient" x2="50%" x1="50%" y2="100%" y1="0%">
+			<stop stop-color="#111d2e" offset="0%" />
+			<stop
 				stop-color="#051839"
 				offset="21.2%"
-			/><stop stop-color="#0a1b48" offset="40.7%" /><stop stop-color="#132e62" offset="58.1%" /><stop
+			/>
+			<stop stop-color="#0a1b48" offset="40.7%" />
+			<stop stop-color="#132e62" offset="58.1%" />
+			<stop
 				stop-color="#144b7e"
 				offset="73.8%"
-			/><stop stop-color="#136497" offset="87.3%" /><stop stop-color="#1387b8" offset="100%" /></linearGradient>
+			/>
+			<stop stop-color="#136497" offset="87.3%" />
+			<stop stop-color="#1387b8" offset="100%" />
+		</linearGradient>
 		<g id="globeLines">
 			<path d="M 250 35 C 210 35 150 100 150 250 C 150 400 210 465 250 465"></path>
 			<path d="M 440 150 C 440 150 330 200 250 200 C 170 200 50 150 50 150"></path>

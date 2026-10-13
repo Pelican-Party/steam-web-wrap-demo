@@ -28,7 +28,7 @@
 				somewhere. You can close the game by calling <code>window.close()</code>. Normally, browsers only allow closing
 				windows that were created by a page, but in Steam Web Wrap this is not the case.
 			</p>
-			<button class="steam-web-wrap-button" onclick="window.close();">Click Here to Close This Window</button>
+			<button class="steam-web-wrap-button" onclick="window.close()">Click Here to Close This Window</button>
 
 			<h2>Toggling Fullscreen</h2>
 			<p>
@@ -50,9 +50,7 @@
 				const toggleFullscreenButton = document.getElementById("toggleFullscreenButton");
 
 				function updateFullscreenButton() {
-					toggleFullscreenButton.textContent = document.fullscreenElement
-						? "Exit Fullscreen"
-						: "Enter Fullscreen";
+					toggleFullscreenButton.textContent = document.fullscreenElement ? "Exit Fullscreen" : "Enter Fullscreen";
 				}
 
 				document.addEventListener("fullscreenchange", (e) => {
@@ -68,7 +66,7 @@
 				opened.
 			</p>
 			<a href="./popup.html" target="_blank">popup.html</a>
-			<button onclick="window.open('./popup.html')">window.open("./popup.html")</button>
+			<button onclick='window.open("./popup.html")'>window.open("./popup.html")</button>
 			<h2>Steamworks SDK</h2>
 			<div id="noSteamworksWarning" class="notecard warn" style="display: none">
 				<p id="noSteamworksWarningText">The Steamworks SDK has not been initialized.</p>
@@ -152,13 +150,90 @@ steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParam
 					);
 				}
 			</script>
+
+			<h3>Steam Input</h3>
+
+			<p>
+				The steamworks sdk can be used to poll for the state of inputs. First you have to create an <a
+					href="https://partner.steamgames.com/doc/features/steam_controller/action_manifest_file"
+					target="_blank"
+				>action manifest file</a> and point to its path in the steamworks dashboard. Once that is done, you can query
+				the state of inputs using <code>steamworks.input.getAnalogActionData()</code> and <code
+				>steamworks.input.getDigitalActionData()</code>.
+			</p>
+
+			<form id="activateActionSetForm">
+				<label>
+					Action set name
+					<input placeholder="FPSControls" id="actionSetNameInput">
+				</label>
+				<input type="submit" value="Activate action set" class="steamworks-required-button">
+				<aside id="activateActionSetStatus"></aside>
+			</form>
+			<script>
+				activateActionSetForm.addEventListener("submit", async (e) => {
+					e.preventDefault();
+					const handle = await steamworks.input.getActionSetHandle(actionSetNameInput.value);
+					if (handle == 0) {
+						activateActionSetStatus.textContent = "Handle not found";
+						return;
+					}
+					await steamworks.input.activateActionSet(steamworks.input.STEAM_INPUT_HANDLE_ALL_CONTROLLERS, handle);
+					activateActionSetStatus.textContent = "Handle activated";
+				});
+			</script>
+			<form id="getActionStatusForm">
+				<label>
+					<input id="getActionStatusDigitalCheckbox" type="checkbox" checked>
+					Digital
+				</label>
+				<label>
+					Action name
+					<input placeholder="jump" id="actionNameInput">
+				</label>
+				<input type="submit" value="Get action status" class="steamworks-required-button">
+				<aside id="getActionStatus"></aside>
+			</form>
+			<script>
+				getActionStatusForm.addEventListener("submit", async (e) => {
+					e.preventDefault();
+					const controllers = await steamworks.input.getConnectedControllers();
+					await steamworks.input.runFrame();
+					const results = [];
+					for (const controller of controllers) {
+						if (controller == 0n) continue;
+						let result;
+						if (getActionStatusDigitalCheckbox.checked) {
+							const handle = await steamworks.input.getDigitalActionHandle(actionNameInput.value);
+							if (handle == 0) {
+								getActionStatus.textContent = "Handle not found";
+								return;
+							}
+							result = await steamworks.input.getDigitalActionData(controller, handle);
+						} else {
+							const handle = await steamworks.input.getAnalogActionHandle(actionNameInput.value);
+							if (handle == 0) {
+								getActionStatus.textContent = "Handle not found";
+								return;
+							}
+							result = await steamworks.input.getAnalogActionData(controller, handle);
+						}
+						results.push(result);
+					}
+					getActionStatus.textContent = JSON.stringify(results);
+				});
+			</script>
 		</main>
 		<script type="module">
-			const isInSteamWebWrap = navigator.userAgent.includes("steam-web-wrap/");
-			if (!isInSteamWebWrap) {
-				for (const button of document.querySelectorAll(".steam-web-wrap-button")) {
+			function disableClassButtons(className) {
+				for (const button of document.getElementsByClassName(className)) {
 					button.disabled = true;
 				}
+			}
+			const isInSteamWebWrap = navigator.userAgent.includes("steam-web-wrap/");
+			if (!isInSteamWebWrap) {
+				disableClassButtons("steam-web-wrap-button");
+				disableClassButtons("steamworks-required-button");
 
 				notInSteamWebWrap.style.display = "";
 			} else if (!("steamworks" in globalThis) || !steamworks) {
@@ -167,6 +242,7 @@ steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParam
 				if (warningText) {
 					noSteamworksWarningText.textContent = warningText;
 				}
+				disableClassButtons("steamworks-required-button");
 			} else {
 				const appId = await steamworks.utils.getAppId();
 				for (const el of document.querySelectorAll(".steamworks-app-id")) {
