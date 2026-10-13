@@ -161,6 +161,11 @@ steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParam
 				the state of inputs using <code>steamworks.input.getAnalogActionData()</code> and <code
 				>steamworks.input.getDigitalActionData()</code>.
 			</p>
+			<script>
+				if (steamworks) {
+					steamworks.input.init(true);
+				}
+			</script>
 
 			<form id="activateActionSetForm">
 				<label>
