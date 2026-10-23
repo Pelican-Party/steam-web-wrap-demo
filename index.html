@@ -228,6 +228,36 @@ steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParam
 					getActionStatus.textContent = JSON.stringify(results);
 				});
 			</script>
+			<p>on-screen glyphs for action origins can be obtained using <code>steamWebWrap.input.getGlyphForActionOrigin()</code>. It returns a data url which can be used in <code>&#60;img&#62;</code> tags or for css background images. If the steamworks api is available, you should see a few of those glyphs below.</p>
+			<pre id="actionOriginImages"></pre>
+			<script>
+			const container = document.getElementById("actionOriginImages");
+			if (container && steamworks) {
+				function createActionOriginImgGroup(extraGlyphStyle) {
+					const styles = [
+						steamworks.input.GlyphStyle.Light,
+						steamworks.input.GlyphStyle.Dark,
+						steamworks.input.GlyphStyle.Knockout,
+					];
+					const group = document.createElement("div");
+					container.append(group);
+					for (const style of styles) {
+						const img = document.createElement("img");
+						group.append(img);
+						(async () => {
+							img.src = await steamworks.input.getGlyphSvgForActionOrigin(
+								steamworks.input.InputActionOrigin.SteamControllerA,
+								style | extraGlyphStyle,
+							);
+						})();
+					}
+				}
+				createActionOriginImgGroup(0);
+				createActionOriginImgGroup(steamworks.input.GlyphStyle.NeutralColorAbxy);
+				createActionOriginImgGroup(steamworks.input.GlyphStyle.SolidAbxy);
+				createActionOriginImgGroup(steamworks.input.GlyphStyle.NeutralColorAbxy | steamworks.input.GlyphStyle.SolidAbxy);
+			}
+			</script>
 		</main>
 		<script type="module">
 			function disableClassButtons(className) {
