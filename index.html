@@ -37,26 +37,26 @@
 				>document.fullscreenElement</code> can be used to detect whether the page is currently fullscreen.
 			</p>
 			<script>
-				async function toggleFullscreen() {
-					if (!document.fullscreenElement) {
-						await document.body.requestFullscreen();
-					} else {
-						await document.exitFullscreen();
-					}
+			async function toggleFullscreen() {
+				if (!document.fullscreenElement) {
+					await document.body.requestFullscreen();
+				} else {
+					await document.exitFullscreen();
 				}
+			}
 			</script>
 			<button id="toggleFullscreenButton" onclick="toggleFullscreen()">Toggle Fullscreen</button>
 			<script>
-				const toggleFullscreenButton = document.getElementById("toggleFullscreenButton");
+			const toggleFullscreenButton = document.getElementById("toggleFullscreenButton");
 
-				function updateFullscreenButton() {
-					toggleFullscreenButton.textContent = document.fullscreenElement ? "Exit Fullscreen" : "Enter Fullscreen";
-				}
+			function updateFullscreenButton() {
+				toggleFullscreenButton.textContent = document.fullscreenElement ? "Exit Fullscreen" : "Enter Fullscreen";
+			}
 
-				document.addEventListener("fullscreenchange", (e) => {
-					updateFullscreenButton();
-				});
+			document.addEventListener("fullscreenchange", (e) => {
 				updateFullscreenButton();
+			});
+			updateFullscreenButton();
 			</script>
 
 			<h2>Opening External URLs</h2>
@@ -124,31 +124,31 @@ steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParam
 			<pre id="eventLog"><div>Waiting for events...</div></pre>
 
 			<script>
-				function logEvent(str) {
-					const el = document.createElement("div");
-					el.textContent = str;
-					eventLog.append(el);
-				}
-				if (steamworks) {
-					steamworks.callback.register(steamworks.callback.SteamCallback.SteamServersConnected, () => {
-						logEvent("Steam servers connected");
-					});
-					steamworks.callback.register(
-						steamworks.callback.SteamCallback.SteamServersDisconnected,
-						(event) => {
-							logEvent("Steam servers disconnected with reason " + event.reason);
-						},
-					);
-					steamworks.callback.register(
-						steamworks.callback.SteamCallback.NewUrlLaunchParameters,
-						async (event) => {
-							const path = await steamworks.apps.launchCommandLine();
-							const param1 = await steamworks.apps.launchQueryParam("param1");
-							const param2 = await steamworks.apps.launchQueryParam("param2");
-							logEvent(`New steam url parameters received: ${path} param1: ${param1} param2: ${param2}`);
-						},
-					);
-				}
+			function logEvent(str) {
+				const el = document.createElement("div");
+				el.textContent = str;
+				eventLog.append(el);
+			}
+			if (steamworks) {
+				steamworks.callback.register(steamworks.callback.SteamCallback.SteamServersConnected, () => {
+					logEvent("Steam servers connected");
+				});
+				steamworks.callback.register(
+					steamworks.callback.SteamCallback.SteamServersDisconnected,
+					(event) => {
+						logEvent("Steam servers disconnected with reason " + event.reason);
+					},
+				);
+				steamworks.callback.register(
+					steamworks.callback.SteamCallback.NewUrlLaunchParameters,
+					async (event) => {
+						const path = await steamworks.apps.launchCommandLine();
+						const param1 = await steamworks.apps.launchQueryParam("param1");
+						const param2 = await steamworks.apps.launchQueryParam("param2");
+						logEvent(`New steam url parameters received: ${path} param1: ${param1} param2: ${param2}`);
+					},
+				);
+			}
 			</script>
 
 			<h3>Steam Input</h3>
@@ -162,9 +162,9 @@ steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParam
 				>steamworks.input.getDigitalActionData()</code>.
 			</p>
 			<script>
-				if (steamworks) {
-					steamworks.input.init(true);
-				}
+			if (steamworks) {
+				steamworks.input.init(true);
+			}
 			</script>
 
 			<form id="activateActionSetForm">
@@ -176,16 +176,16 @@ steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParam
 				<aside id="activateActionSetStatus"></aside>
 			</form>
 			<script>
-				activateActionSetForm.addEventListener("submit", async (e) => {
-					e.preventDefault();
-					const handle = await steamworks.input.getActionSetHandle(actionSetNameInput.value);
-					if (handle == 0) {
-						activateActionSetStatus.textContent = "Handle not found";
-						return;
-					}
-					await steamworks.input.activateActionSet(steamworks.input.STEAM_INPUT_HANDLE_ALL_CONTROLLERS, handle);
-					activateActionSetStatus.textContent = "Handle activated";
-				});
+			activateActionSetForm.addEventListener("submit", async (e) => {
+				e.preventDefault();
+				const handle = await steamworks.input.getActionSetHandle(actionSetNameInput.value);
+				if (handle == 0) {
+					activateActionSetStatus.textContent = "Handle not found";
+					return;
+				}
+				await steamworks.input.activateActionSet(steamworks.input.STEAM_INPUT_HANDLE_ALL_CONTROLLERS, handle);
+				activateActionSetStatus.textContent = "Handle activated";
+			});
 			</script>
 			<form id="getActionStatusForm">
 				<label>
@@ -200,33 +200,33 @@ steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParam
 				<aside id="getActionStatus"></aside>
 			</form>
 			<script>
-				getActionStatusForm.addEventListener("submit", async (e) => {
-					e.preventDefault();
-					const controllers = await steamworks.input.getConnectedControllers();
-					await steamworks.input.runFrame();
-					const results = [];
-					for (const controller of controllers) {
-						if (controller == 0n) continue;
-						let result;
-						if (getActionStatusDigitalCheckbox.checked) {
-							const handle = await steamworks.input.getDigitalActionHandle(actionNameInput.value);
-							if (handle == 0) {
-								getActionStatus.textContent = "Handle not found";
-								return;
-							}
-							result = await steamworks.input.getDigitalActionData(controller, handle);
-						} else {
-							const handle = await steamworks.input.getAnalogActionHandle(actionNameInput.value);
-							if (handle == 0) {
-								getActionStatus.textContent = "Handle not found";
-								return;
-							}
-							result = await steamworks.input.getAnalogActionData(controller, handle);
+			getActionStatusForm.addEventListener("submit", async (e) => {
+				e.preventDefault();
+				const controllers = await steamworks.input.getConnectedControllers();
+				await steamworks.input.runFrame();
+				const results = [];
+				for (const controller of controllers) {
+					if (controller == 0n) continue;
+					let result;
+					if (getActionStatusDigitalCheckbox.checked) {
+						const handle = await steamworks.input.getDigitalActionHandle(actionNameInput.value);
+						if (handle == 0) {
+							getActionStatus.textContent = "Handle not found";
+							return;
 						}
-						results.push(result);
+						result = await steamworks.input.getDigitalActionData(controller, handle);
+					} else {
+						const handle = await steamworks.input.getAnalogActionHandle(actionNameInput.value);
+						if (handle == 0) {
+							getActionStatus.textContent = "Handle not found";
+							return;
+						}
+						result = await steamworks.input.getAnalogActionData(controller, handle);
 					}
-					getActionStatus.textContent = JSON.stringify(results);
-				});
+					results.push(result);
+				}
+				getActionStatus.textContent = JSON.stringify(results);
+			});
 			</script>
 			<p>on-screen glyphs for action origins can be obtained using <code>steamWebWrap.input.getGlyphForActionOrigin()</code>. It returns a data url which can be used in <code>&#60;img&#62;</code> tags or for css background images. If the steamworks api is available, you should see a few of those glyphs below.</p>
 			<pre id="actionOriginImages"></pre>
@@ -260,33 +260,33 @@ steamworks.callback.register(steamworks.callback.SteamCallback.NewUrlLaunchParam
 			</script>
 		</main>
 		<script type="module">
-			function disableClassButtons(className) {
-				for (const button of document.getElementsByClassName(className)) {
-					button.disabled = true;
-				}
+		function disableClassButtons(className) {
+			for (const button of document.getElementsByClassName(className)) {
+				button.disabled = true;
 			}
-			const isInSteamWebWrap = navigator.userAgent.includes("steam-web-wrap/");
-			if (!isInSteamWebWrap) {
-				disableClassButtons("steam-web-wrap-button");
-				disableClassButtons("steamworks-required-button");
+		}
+		const isInSteamWebWrap = navigator.userAgent.includes("steam-web-wrap/");
+		if (!isInSteamWebWrap) {
+			disableClassButtons("steam-web-wrap-button");
+			disableClassButtons("steamworks-required-button");
 
-				notInSteamWebWrap.style.display = "";
-			} else if (!("steamworks" in globalThis) || !steamworks) {
-				noSteamworksWarning.style.display = "";
-				const warningText = _steamWebWrapInternal.steamNotInitializedWarningMessage;
-				if (warningText) {
-					noSteamworksWarningText.textContent = warningText;
-				}
-				disableClassButtons("steamworks-required-button");
-			} else {
-				const appId = await steamworks.utils.getAppId();
-				for (const el of document.querySelectorAll(".steamworks-app-id")) {
-					el.textContent = appId;
-				}
-				runAppLink.href = `steam://run/${appId}//myCustomParameters`;
-				launchParametersDemoText.style.display = "";
-				launchParametersDemoLink.href = `./launchParametersDemo.html?appId=${appId}`;
+			notInSteamWebWrap.style.display = "";
+		} else if (!("steamworks" in globalThis) || !steamworks) {
+			noSteamworksWarning.style.display = "";
+			const warningText = _steamWebWrapInternal.steamNotInitializedWarningMessage;
+			if (warningText) {
+				noSteamworksWarningText.textContent = warningText;
 			}
+			disableClassButtons("steamworks-required-button");
+		} else {
+			const appId = await steamworks.utils.getAppId();
+			for (const el of document.querySelectorAll(".steamworks-app-id")) {
+				el.textContent = appId;
+			}
+			runAppLink.href = `steam://run/${appId}//myCustomParameters`;
+			launchParametersDemoText.style.display = "";
+			launchParametersDemoLink.href = `./launchParametersDemo.html?appId=${appId}`;
+		}
 		</script>
 	</body>
 </html>

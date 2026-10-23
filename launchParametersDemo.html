@@ -16,33 +16,33 @@
 			<p id="visitText" style="display: none">Visit <a id="link"></a>.</p>
 		</main>
 		<script>
-			function update() {
-				let href = `steam://run/${appId.value}//${path.value}`;
-				const params = [];
-				if (param1.value) params.push("param1=" + param1.value);
-				if (param2.value) params.push("param2=" + param2.value);
-				if (params.length > 0) {
-					href += "/?" + params.join(";");
-				}
-				visitText.style.display = (appId.value && path.value) ? "" : "none";
-				link.href = href;
-				link.textContent = href;
+		function update() {
+			let href = `steam://run/${appId.value}//${path.value}`;
+			const params = [];
+			if (param1.value) params.push("param1=" + param1.value);
+			if (param2.value) params.push("param2=" + param2.value);
+			if (params.length > 0) {
+				href += "/?" + params.join(";");
 			}
+			visitText.style.display = (appId.value && path.value) ? "" : "none";
+			link.href = href;
+			link.textContent = href;
+		}
 
-			appId.addEventListener("input", update);
-			appId.addEventListener("change", update);
-			path.addEventListener("input", update);
-			path.addEventListener("change", update);
-			param1.addEventListener("input", update);
-			param1.addEventListener("change", update);
-			param2.addEventListener("input", update);
-			param2.addEventListener("change", update);
-			const url = new URL(location.href);
-			const urlAppId = parseInt(url.searchParams.get("appId"));
-			if (!isNaN(urlAppId)) {
-				appId.value = urlAppId;
-			}
-			update();
+		appId.addEventListener("input", update);
+		appId.addEventListener("change", update);
+		path.addEventListener("input", update);
+		path.addEventListener("change", update);
+		param1.addEventListener("input", update);
+		param1.addEventListener("change", update);
+		param2.addEventListener("input", update);
+		param2.addEventListener("change", update);
+		const url = new URL(location.href);
+		const urlAppId = parseInt(url.searchParams.get("appId"));
+		if (!isNaN(urlAppId)) {
+			appId.value = urlAppId;
+		}
+		update();
 		</script>
 	</body>
 </html>
