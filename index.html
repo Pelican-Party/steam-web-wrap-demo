@@ -67,6 +67,24 @@
 			</p>
 			<a href="./popup.html" target="_blank">popup.html</a>
 			<button onclick='window.open("./popup.html")'>window.open("./popup.html")</button>
+
+			<h2>Getting Launch Parameters</h2>
+			<p>
+				Launch parameters are stored in the <code>launchArgs</code> query parameter as a JSON string:
+			</p>
+			<pre>
+JSON.parse(new URLSearchParams(window.location.search).get("launchArgs") ?? "[]");
+// ["+connect_lobby", "109775249366865578"]
+</pre>
+			<p>
+				If Steam Web Wrap launched this page with arguments, they should show up below:
+			</p>
+			<pre id="launchArgsResult"></pre>
+			<script>
+			const args = JSON.parse(new URLSearchParams(window.location.search).get("launchArgs") ?? "[]");
+			launchArgsResult.textContent = args.join("\n");
+			</script>
+
 			<h2>Steamworks SDK</h2>
 			<div id="noSteamworksWarning" class="notecard warn" style="display: none">
 				<p id="noSteamworksWarningText">The Steamworks SDK has not been initialized.</p>
